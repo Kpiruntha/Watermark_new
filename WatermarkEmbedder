@@ -16,13 +16,13 @@ namespace StegWaterMark
                 {
                     Color clr_visible = bm_visible.GetPixel(x, y);
                     Color clr_hidden = bm_hidden.GetPixel(x, y);
-                    var a1 = clr_hidden.R;
-                    var a2 = shift;
-                    var a3 = clr_hidden.R >> shift;
-                    var a4 = clr_visible.R;
-                    var a5 = visible_mask;
-                    var a6 = clr_visible.R & visible_mask;
-                    var a7 = (clr_hidden.R >> shift) & hidden_mask;
+                    //var a1 = clr_hidden.R;
+                    //var a2 = shift;
+                   //var a3 = clr_hidden.R >> shift;
+                    //var a4 = clr_visible.R;
+                    //var a5 = visible_mask;
+                    //var a6 = clr_visible.R & visible_mask;
+                    //var a7 = (clr_hidden.R >> shift) & hidden_mask;
                     int r = (clr_visible.R & visible_mask) + ((clr_hidden.R >> shift) & hidden_mask);
                     int g = (clr_visible.G & visible_mask) + ((clr_hidden.G >> shift) & hidden_mask);
                     int b = (clr_visible.B & visible_mask) + ((clr_hidden.B >> shift) & hidden_mask);
