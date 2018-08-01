@@ -1,0 +1,61 @@
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace StegWaterMark
+{
+    public partial class EmbedWaterMrkForm : Form
+    {
+        public string FileLocationInfo { get; set; }
+        public EmbedWaterMrkForm()
+        {
+            InitializeComponent();
+        }
+
+        private void linkCoverLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                picbCoverImage.ImageLocation = open.FileName;
+            }
+        }
+
+        private void linkWaterMrkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                picbWaterMrkImage.ImageLocation = open.FileName;
+                FileLocationInfo = open.InitialDirectory;
+            }
+        }
+
+        private void btnEmbed_Click(object sender, EventArgs e)
+        {
+            var coverImage = (Bitmap) picbCoverImage.Image;
+            var waterMarkImage = (Bitmap) picbWaterMrkImage.Image;
+            var cvrimgWidth = coverImage.Width;
+            var cvrimgHeight = coverImage.Height;
+            var wtimgWidth = waterMarkImage.Width;
+            var wtimgHeight = waterMarkImage.Height;
+            if (cvrimgWidth <= wtimgWidth || cvrimgHeight <= wtimgHeight)
+            {
+                MessageBox.Show(@"Watermark image should be smaller than cover image");
+            }
+            else
+            {
+                Cursor = Cursors.WaitCursor;
+                int num_bits = 3;
+                // Hide the image.
+                var img = WaterMarkEmbedder.HideImage(
+                    coverImage,
+                    waterMarkImage,
+                    num_bits);
+                DownLoadForm dfrm = new DownLoadForm(img);
+                dfrm.Show();
+            }
+        }
+    }
+}
