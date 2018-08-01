@@ -1,0 +1,67 @@
+
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
+
+namespace StegWaterMark
+{
+    public partial class AddWatermark : Form
+    {
+        public AddWatermark()
+        {
+            InitializeComponent();
+        }
+
+        private void btnLoadWtrMrk_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                picbAddwotermrk.ImageLocation = open.FileName;
+            }
+        }
+
+        private void btnSaveWtrMrk_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Images|*.png;*.bmp;*.jpg";
+            ImageFormat format = ImageFormat.Png;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string ext = System.IO.Path.GetExtension(sfd.FileName);
+                switch (ext)
+                {
+                    case ".jpg":
+                        format = ImageFormat.Jpeg;
+                        break;
+                    case ".bmp":
+                        format = ImageFormat.Bmp;
+                        break;
+                }
+                var wimage = ProcessWtrImage();
+                wimage.Save(sfd.FileName, format);
+            }
+        }
+
+        private Bitmap ProcessWtrImage()
+        {
+            int shift = 5;
+            int visible_mask = 0xFF << shift;
+            var img = (Bitmap)picbAddwotermrk.Image;
+            for (int x = 0; x < img.Width; x++)
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    Color clr_visible = img.GetPixel(x, y);
+
+                    int r = (clr_visible.R & visible_mask);
+                    int g = (clr_visible.G & visible_mask);
+                    int b = (clr_visible.B & visible_mask);
+                    img.SetPixel(x, y, Color.FromArgb(255, r, g, b));
+                }
+            }
+            return img;
+        }
+    }
+}
